@@ -172,7 +172,6 @@
         let correctGuesses = 0;
         let startTime, timerInterval;
         let nickname = "";
-        const leaderboard = [];
         const guesses = [];
         const correctQuestionAnswer = "89억"; // 정답
 
@@ -304,14 +303,18 @@
         }
 
         function saveToLeaderboard(nickname, score, time, totalScore) {
+            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
             leaderboard.push({ nickname, score, time, totalScore });
             leaderboard.sort((a, b) => b.totalScore - a.totalScore || a.time - b.time);
+            leaderboard = leaderboard.slice(0, 10); // 상위 10명만 저장
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
         }
 
         function showLeaderboard() {
             document.getElementById('game').style.display = 'none';
             const leaderboardBody = document.getElementById('leaderboard-body');
             leaderboardBody.innerHTML = '';
+            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
             leaderboard.forEach((entry, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
